@@ -1,17 +1,61 @@
 package com.example;
 
-import org.joda.time.LocalTime;
+import org.joda.time.LocalDate;
 
-public class human {
+public class Human {
+    public enum Gender {
+        man,
+        woman
+    }
     private String fullName;
-    private Byte sex;
-    private LocalTime dateBirth;
+    private Gender gender;
+    private LocalDate dateBirth;
     private Integer id;
+    private static int objectsCount = 1;
 
-    public human(String fullName, Byte sex, LocalTime dateBirth, Integer id) {
+    public Human(String fullName, Gender gender, LocalDate dateBirth) {
         this.fullName = fullName;
-        this.sex = sex;
+        this.gender = gender;
         this.dateBirth = dateBirth;
-        this.id = id;
+        this.id = objectsCount;
+        this.objectsCount++;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getDateBirth() {
+        return dateBirth;
+    }
+
+    public void setDateBirth(LocalDate dateBirth) {
+        this.dateBirth = dateBirth;
+    }
+
+    @Override
+    public String toString() {
+        return "Human{" +
+                "fullName='" + fullName + '\'' +
+                ", gender=" + gender +
+                ", dateBirth=" + dateBirth +
+                ", id=" + id +
+                '}';
     }
 }
