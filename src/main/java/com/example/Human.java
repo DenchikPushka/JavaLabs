@@ -13,12 +13,12 @@ public class Human {
     private Integer id;
     private static int objectsCount = 1;
 
-    public Human(String fullName, Gender gender, LocalDate dateBirth) {
+    Human(String fullName, Gender gender, LocalDate dateBirth) {
         this.fullName = fullName;
         this.gender = gender;
         this.dateBirth = dateBirth;
         this.id = objectsCount;
-        this.objectsCount++;
+        objectsCount++;
     }
 
     public Integer getId() {
