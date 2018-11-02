@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.Scanner;
 
-public class Terminal {
+public class TerminalRenaming {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -14,8 +14,22 @@ public class Terminal {
         String inputFullName = scanner.nextLine();
 
         System.out.println("Enter gender");
-        Byte inputGender = scanner.nextByte();
+        Byte inputGenderByte = scanner.nextByte();
         scanner.nextLine();
+        System.out.println(inputGenderByte);
+        HumanRenaming.Gender inputGender = null;
+
+        switch (inputGenderByte) {
+            case 1:
+                inputGender = HumanRenaming.Gender.man;
+                break;
+            case 2:
+                inputGender = HumanRenaming.Gender.woman;
+                break;
+                default:
+
+                    break;
+        }
 
         System.out.println("Enter date of birth");
         String inputDateString = scanner.nextLine();
@@ -23,7 +37,8 @@ public class Terminal {
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy");
         LocalDate inputDate = LocalDate.parse(inputDateString, dateFormat);
 
-        Human human = new Human(inputFullName, inputGender, inputDate);
+        HumanRenaming human = new HumanRenaming(inputFullName, inputGender, inputDate);
         System.out.println(human.toString());
+
     }
 }
