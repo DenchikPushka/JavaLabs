@@ -40,5 +40,8 @@ public class Terminal {
         Human human = new Human(inputFullName, inputGender, inputDate);
         System.out.println(human.toString());
 
+        human = new Human(inputFullName, inputGender, inputDate);
+        System.out.println(human.toString());
+
     }
 }
