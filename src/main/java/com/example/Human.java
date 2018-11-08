@@ -1,6 +1,7 @@
 package com.example;
 
 import org.joda.time.LocalDate;
+import org.joda.time.ReadablePeriod;
 
 public class Human {
     public enum Gender {
@@ -19,6 +20,15 @@ public class Human {
         this.dateBirth = dateBirth;
         this.id = objectsCount;
         objectsCount++;
+    }
+
+    public Integer getAge() {
+        Integer year = dateBirth.getYear(),
+            month = dateBirth.getMonthOfYear(),
+            day = dateBirth.getDayOfMonth();
+        System.out.println(year.toString()+ ", " + month.toString()+ ", " + day.toString());
+        LocalDate tempDate = new LocalDate().minusYears(year).minusMonths(month).minusDays(day);
+        return tempDate.getYear();
     }
 
     public Integer getId() {

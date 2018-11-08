@@ -13,17 +13,15 @@ public class Terminal {
         System.out.println("Enter full name");
         String inputFullName = scanner.nextLine();
 
-        System.out.println("Enter gender");
-        Byte inputGenderByte = scanner.nextByte();
-        scanner.nextLine();
-        System.out.println(inputGenderByte);
+        System.out.println("Enter gender (m - man, w - woman)");
+        char inputGenderChar = scanner.nextLine().charAt(0);
         Human.Gender inputGender = null;
 
-        switch (inputGenderByte) {
-            case 1:
+        switch (inputGenderChar) {
+            case 'm':
                 inputGender = Human.Gender.man;
                 break;
-            case 2:
+            case 'w':
                 inputGender = Human.Gender.woman;
                 break;
                 default:
@@ -31,7 +29,7 @@ public class Terminal {
                     break;
         }
 
-        System.out.println("Enter date of birth");
+        System.out.println("Enter date of birth (format: dd.MM.yyyy)");
         String inputDateString = scanner.nextLine();
 
         DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy");
@@ -42,6 +40,6 @@ public class Terminal {
 
         human = new Human(inputFullName, inputGender, inputDate);
         System.out.println(human.toString());
-
+        System.out.println(human.getAge());
     }
 }
