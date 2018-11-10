@@ -17,6 +17,7 @@ public class Terminal {
             command = scanner.nextInt();
             switch (command) {
                 case 0:
+                    System.exit(0);
                     break;
                 case 1:
                     createHuman(humans);
@@ -54,7 +55,14 @@ public class Terminal {
         String inputFullName = scanner.nextLine();
 
         System.out.println("Введите пол (m - man, w - woman):");
-        char inputGenderChar = scanner.nextLine().charAt(0);
+        char inputGenderChar;
+        try {
+            inputGenderChar = scanner.nextLine().charAt(0);
+        } catch (Throwable t) {
+            System.out.println("Пол не был выбран!");
+            return;
+        }
+
         Human.Gender inputGender;
 
         switch (inputGenderChar) {
