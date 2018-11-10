@@ -24,10 +24,10 @@ public class Human {
 
     public Integer getAge() {
         Integer year = dateBirth.getYear(),
-            month = dateBirth.getMonthOfYear(),
-            day = dateBirth.getDayOfMonth();
-        System.out.println(year.toString()+ ", " + month.toString()+ ", " + day.toString());
-        LocalDate tempDate = new LocalDate().minusYears(year).minusMonths(month).minusDays(day);
+            month = dateBirth.getMonthOfYear() - 1,
+            day = dateBirth.getDayOfMonth() - 1;
+        LocalDate tempDate = new LocalDate().minusDays(day).minusMonths(month).minusYears(year);
+
         return tempDate.getYear();
     }
 
