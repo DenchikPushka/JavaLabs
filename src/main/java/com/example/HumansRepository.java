@@ -3,15 +3,17 @@ package com.example;
 import com.sun.istack.internal.NotNull;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class HumansRepository {
     private Human[] arrayHumans;
-
+    private Sorter sorter;
     /**
      * Constructs a new and empty repository of humans.
      */
     HumansRepository() {
         arrayHumans = new Human[0];
+        sorter = new BubbleSort();
     }
 
     /**
@@ -120,6 +122,10 @@ public class HumansRepository {
      */
     public int getLength() {
         return arrayHumans.length;
+    }
+
+    public void sortBy(Comparator comparator) {
+        this.arrayHumans = sorter.sort(arrayHumans, comparator);
     }
 
     @Override

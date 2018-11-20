@@ -41,8 +41,8 @@ public class Human {
      */
     public Integer getAge() {
         Integer year = dateBirth.getYear(),
-            month = dateBirth.getMonthOfYear() - 1,
-            day = dateBirth.getDayOfMonth() - 1;
+                month = dateBirth.getMonthOfYear() - 1,
+                day = dateBirth.getDayOfMonth() - 1;
         LocalDate tempDate = new LocalDate().minusDays(day).minusMonths(month).minusYears(year);
 
         return tempDate.getYear();
