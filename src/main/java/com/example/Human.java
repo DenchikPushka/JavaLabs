@@ -1,8 +1,6 @@
 package com.example;
 
-import com.sun.istack.internal.NotNull;
 import org.joda.time.LocalDate;
-import org.joda.time.ReadablePeriod;
 
 public class Human {
     /**
@@ -24,7 +22,7 @@ public class Human {
      * @param gender Human's gender (use the class Human.Gender)
      * @param dateBirth Human's date of birth
      */
-    Human(@NotNull String fullName, @NotNull Gender gender, @NotNull LocalDate dateBirth) {
+    Human(String fullName, Gender gender, LocalDate dateBirth) {
         if (fullName == null || gender == null || dateBirth == null) {
             throw new Error("One of the parameters is null");
         }
@@ -56,7 +54,7 @@ public class Human {
         return fullName;
     }
 
-    public void setFullName(@NotNull String fullName) {
+    public void setFullName(String fullName) {
         if (fullName == null) {
             throw new Error("fullName is null");
         }
@@ -67,7 +65,7 @@ public class Human {
         return gender;
     }
 
-    public void setGender(@NotNull Gender gender) {
+    public void setGender(Gender gender) {
         if (gender == null) {
             throw new Error("gender is null");
         }
@@ -78,7 +76,7 @@ public class Human {
         return dateBirth;
     }
 
-    public void setDateBirth(@NotNull LocalDate dateBirth) {
+    public void setDateBirth(LocalDate dateBirth) {
         if (dateBirth == null) {
             throw new Error("dateBirth is null");
         }

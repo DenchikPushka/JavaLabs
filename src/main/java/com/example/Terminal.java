@@ -47,7 +47,7 @@ public class Terminal {
 
     }
 
-    public static void printCommands(){
+    private static void printCommands(){
         System.out.println("----------------------------------------");
         System.out.println("1: Добавить человека");
         System.out.println("2: Удалить человека");
@@ -58,7 +58,7 @@ public class Terminal {
         System.out.println("----------------------------------------");
     }
 
-    public static void createHuman(HumansRepository repository) {
+    private static void createHuman(HumansRepository repository) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите имя:");
         String inputFullName = scanner.nextLine();
@@ -105,7 +105,7 @@ public class Terminal {
         printHumanFromRepository(repository, human);
     }
 
-    public static void deleteHuman(HumansRepository repository) {
+    private static void deleteHuman(HumansRepository repository) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Удалить человека (1 - по id, 2 - по индексу)");
         int command = scanner.nextInt();
@@ -133,13 +133,13 @@ public class Terminal {
         }
     }
 
-    public static void getHuman(HumansRepository repository) {
+    private static void getHuman(HumansRepository repository) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Получить человека (1 - по id, 2 - по индексу)");
         int command = scanner.nextInt();
         System.out.println("Введите значение:");
         int value = scanner.nextInt();
-        Human human = null;
+        Human human;
 
         switch (command) {
             case 1:
@@ -160,7 +160,7 @@ public class Terminal {
         }
     }
 
-    public static void printHumanFromRepository(HumansRepository repository, Human human) {
+    private static void printHumanFromRepository(HumansRepository repository, Human human) {
         System.out.println(repository.getIndexById(human.getId()) +
                 ": {" +
                 "fullName='" + human.getFullName() + '\'' +
@@ -171,7 +171,7 @@ public class Terminal {
                 '}');
     }
 
-    public static void printRepository(HumansRepository repository) {
+    private static void printRepository(HumansRepository repository) {
         int repositoryLength = repository.getLength();
         if (repositoryLength == 0) {
             System.out.println("Пусто");
@@ -185,7 +185,7 @@ public class Terminal {
         }
     }
 
-    public static void sortRepository(HumansRepository repository) {
+    private static void sortRepository(HumansRepository repository) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Отсортировать репозиторий (1 - по id, 2 - по имени)");
         int command = scanner.nextInt();

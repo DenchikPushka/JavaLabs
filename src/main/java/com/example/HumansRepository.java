@@ -1,7 +1,5 @@
 package com.example;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -34,7 +32,7 @@ public class HumansRepository {
      * Adds a human to the end of the repository.
      * @param human Object of class Human
      */
-    public void insert(@NotNull Human human) {
+    public void insert(Human human) {
         if (human == null) {
             throw new Error("human is null");
         }
