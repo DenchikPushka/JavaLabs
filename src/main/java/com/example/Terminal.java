@@ -2,6 +2,7 @@ package com.example;
 
 import com.example.checkers.HumanFullNameChecker;
 import com.example.checkers.HumanIdChecker;
+import com.example.comparators.HumanAgeComparator;
 import com.example.comparators.HumanFullNameComparator;
 import com.example.comparators.HumanIdComparator;
 import com.example.humans.Human;
@@ -196,7 +197,10 @@ public class Terminal {
 
     private static void sortRepository(HumansRepository repository) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Отсортировать репозиторий (1 - по id, 2 - по имени)");
+        System.out.println("Отсортировать репозиторий");
+        System.out.println("1 - по id");
+        System.out.println("2 - по имени");
+        System.out.println("3 - по возрасту)");
         int command = scanner.nextInt();
 
         switch (command) {
@@ -207,6 +211,10 @@ public class Terminal {
             case 2:
                 repository.sortBy(new HumanFullNameComparator());
                 System.out.println("Репозиторий отсортирован по имени");
+                break;
+            case 3:
+                repository.sortBy(new HumanAgeComparator());
+                System.out.println("Репозиторий отсортирован по возрасту");
                 break;
             default:
                 System.out.println("Недопустимая комманда!");
