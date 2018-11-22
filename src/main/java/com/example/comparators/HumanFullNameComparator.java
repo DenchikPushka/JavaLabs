@@ -1,4 +1,6 @@
-package com.example;
+package com.example.comparators;
+
+import com.example.humans.Human;
 
 import java.util.Comparator;
 

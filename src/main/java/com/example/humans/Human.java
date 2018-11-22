@@ -1,4 +1,4 @@
-package com.example;
+package com.example.humans;
 
 import org.joda.time.LocalDate;
 
@@ -22,7 +22,7 @@ public class Human {
      * @param gender Human's gender (use the class Human.Gender)
      * @param dateBirth Human's date of birth
      */
-    Human(String fullName, Gender gender, LocalDate dateBirth) {
+    public Human(String fullName, Gender gender, LocalDate dateBirth) {
         if (fullName == null || gender == null || dateBirth == null) {
             throw new Error("One of the parameters is null");
         }

@@ -1,5 +1,11 @@
 package com.example;
 
+import com.example.checkers.HumanFullNameChecker;
+import com.example.checkers.HumanIdChecker;
+import com.example.comparators.HumanFullNameComparator;
+import com.example.comparators.HumanIdComparator;
+import com.example.humans.Human;
+import com.example.humans.HumansRepository;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
@@ -39,12 +45,14 @@ public class Terminal {
                 case 5:
                     sortRepository(humans);
                     break;
+                case 6:
+                    findHumans(humans);
+                    break;
                 default:
                     System.out.println("Комманда не найдена");
                     break;
             }
         }
-
     }
 
     private static void printCommands(){
@@ -54,6 +62,7 @@ public class Terminal {
         System.out.println("3: Получить человека");
         System.out.println("4: Вывести репозиторий");
         System.out.println("5: Отсортировать репозиторий");
+        System.out.println("6: Поиск человека");
         System.out.println("0: Выход");
         System.out.println("----------------------------------------");
     }
@@ -205,6 +214,33 @@ public class Terminal {
         }
 
         printRepository(repository);
+    }
+
+    private static void findHumans(HumansRepository repository) {
+        Scanner scanner = new Scanner(System.in);
+        Human[] foundHumans;
+        System.out.println("Найти человека (1 - по id, 2 - по имени)");
+        int command = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Введите значение:");
+        String value = scanner.nextLine();
+
+        switch (command) {
+            case 1:
+                foundHumans = repository.findBy(new HumanIdChecker(), value);
+                break;
+            case 2:
+                foundHumans = repository.findBy(new HumanFullNameChecker(), value);
+                break;
+            default:
+                System.out.println("Недопустимая комманда!");
+                return;
+        }
+
+        int resultLength = foundHumans.length;
+        for (int i = 0; i < resultLength; i++) {
+            printHumanFromRepository(repository, foundHumans[i]);
+        }
     }
 
 }

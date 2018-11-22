@@ -1,4 +1,9 @@
-package com.example;
+package com.example.humans;
+
+import com.example.checkers.Checker;
+import com.example.humans.Human;
+import com.example.sorters.BubbleSort;
+import com.example.sorters.Sorter;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -9,7 +14,7 @@ public class HumansRepository {
     /**
      * Constructs a new and empty repository of humans.
      */
-    HumansRepository() {
+    public HumansRepository() {
         arrayHumans = new Human[0];
         sorter = new BubbleSort();
     }
@@ -124,6 +129,17 @@ public class HumansRepository {
 
     public void sortBy(Comparator comparator) {
         this.arrayHumans = sorter.sort(arrayHumans, comparator);
+    }
+
+    public Human[] findBy(Checker checker, Object value) {
+        Human[] oneHumanArray = new Human[1], result = new Human[0];
+        for (int i = this.arrayHumans.length; i-- > 0;) {
+            if (checker.check(arrayHumans[i], value)) {
+                oneHumanArray[0] = arrayHumans[i];
+                result = concatHumans(oneHumanArray, result);
+            }
+        }
+        return result;
     }
 
     @Override
