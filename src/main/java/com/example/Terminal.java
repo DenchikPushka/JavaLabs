@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.checkers.HumanAgeChecker;
 import com.example.checkers.HumanFullNameChecker;
 import com.example.checkers.HumanIdChecker;
 import com.example.comparators.HumanAgeComparator;
@@ -7,6 +8,8 @@ import com.example.comparators.HumanFullNameComparator;
 import com.example.comparators.HumanIdComparator;
 import com.example.humans.Human;
 import com.example.humans.HumansRepository;
+import com.example.sorters.BubbleSort;
+import com.example.sorters.QuickSort;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
@@ -16,13 +19,34 @@ import java.util.Scanner;
 public class Terminal {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        HumansRepository humans = new HumansRepository();
+        HumansRepository humans;
+        System.out.println("Выберите сортировку:");
+        System.out.println("1 - Пузырек");
+        System.out.println("2 - Быстрая");
+        int sortType = scanner.nextInt();
+        scanner.nextLine();
+        switch (sortType) {
+            case 1:
+                humans = new HumansRepository(new BubbleSort());
+                System.out.println("Выбран пузырек");
+                break;
+            case 2:
+                humans = new HumansRepository(new QuickSort());
+                System.out.println("Выбрана быстрая сортировка");
+                break;
+            default:
+                humans = new HumansRepository(new BubbleSort());
+                System.out.println("По умолчанию выбран пузырек");
+                break;
+        }
+
         int command = 999;
         humans.insert(new Human("q1", Human.Gender.man, new LocalDate().minusYears(22)));
         humans.insert(new Human("w1", Human.Gender.man, new LocalDate().minusYears(12)));
         humans.insert(new Human("aaa bbb", Human.Gender.man, new LocalDate().minusYears(11)));
         humans.insert(new Human("bbb", Human.Gender.man, new LocalDate().minusYears(44)));
         humans.insert(new Human("r2d2", Human.Gender.man, new LocalDate().minusYears(13)));
+        humans.insert(new Human("bbb", Human.Gender.man, new LocalDate().minusYears(44)));
 
         while (command != 0) {
             printCommands();
@@ -200,7 +224,7 @@ public class Terminal {
         System.out.println("Отсортировать репозиторий");
         System.out.println("1 - по id");
         System.out.println("2 - по имени");
-        System.out.println("3 - по возрасту)");
+        System.out.println("3 - по возрасту");
         int command = scanner.nextInt();
 
         switch (command) {
@@ -227,7 +251,10 @@ public class Terminal {
     private static void findHumans(HumansRepository repository) {
         Scanner scanner = new Scanner(System.in);
         Human[] foundHumans;
-        System.out.println("Найти человека (1 - по id, 2 - по имени)");
+        System.out.println("Найти человека");
+        System.out.println("1 - по id");
+        System.out.println("2 - по имени");
+        System.out.println("3 - по возрасту");
         int command = scanner.nextInt();
         scanner.nextLine();
         System.out.println("Введите значение:");
@@ -239,6 +266,9 @@ public class Terminal {
                 break;
             case 2:
                 foundHumans = repository.findBy(new HumanFullNameChecker(), value);
+                break;
+            case 3:
+                foundHumans = repository.findBy(new HumanAgeChecker(), value);
                 break;
             default:
                 System.out.println("Недопустимая комманда!");

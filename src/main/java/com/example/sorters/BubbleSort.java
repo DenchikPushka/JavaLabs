@@ -23,6 +23,6 @@ public class BubbleSort implements Sorter {
                 }
             }
         }
-        return people;
+        return this.people;
     }
 }

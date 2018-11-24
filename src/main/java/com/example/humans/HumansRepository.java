@@ -14,9 +14,9 @@ public class HumansRepository {
     /**
      * Constructs a new and empty repository of humans.
      */
-    public HumansRepository() {
-        arrayHumans = new Human[0];
-        sorter = new BubbleSort();
+    public HumansRepository(Sorter sorter) {
+        this.arrayHumans = new Human[0];
+        this.sorter = sorter;
     }
 
     /**
