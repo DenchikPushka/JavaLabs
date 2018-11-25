@@ -1,8 +1,6 @@
 package com.example.humans;
 
 import com.example.checkers.Checker;
-import com.example.humans.Human;
-import com.example.sorters.BubbleSort;
 import com.example.sorters.Sorter;
 
 import java.util.Arrays;
@@ -11,8 +9,10 @@ import java.util.Comparator;
 public class HumansRepository {
     private Human[] arrayHumans;
     private Sorter sorter;
+
     /**
-     * Constructs a new and empty repository of humans.
+     * Creates a new and empty repository of humans with the choice of sorting.
+     * @param sorter object sorter defining used sorting
      */
     public HumansRepository(Sorter sorter) {
         this.arrayHumans = new Human[0];
@@ -127,10 +127,20 @@ public class HumansRepository {
         return arrayHumans.length;
     }
 
+    /**
+     * Sorts humans in repository in ascending order by a specific field.
+     * @param comparator object defining sorting by the corresponding field
+     */
     public void sortBy(Comparator comparator) {
         this.arrayHumans = sorter.sort(arrayHumans, comparator);
     }
 
+    /**
+     * Finds humans in repository by a specific field.
+     * @param checker object defined finding by the corresponding field
+     * @param value value to search
+     * @return array of found humans
+     */
     public Human[] findBy(Checker checker, Object value) {
         Human[] oneHumanArray = new Human[1], result = new Human[0];
         for (int i = this.arrayHumans.length; i-- > 0;) {
