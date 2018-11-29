@@ -2,6 +2,8 @@ package com.example.humans;
 
 import org.joda.time.LocalDate;
 
+import java.util.Objects;
+
 public class Human {
     /**
      * Gender of human. Values: man, woman.
@@ -81,6 +83,21 @@ public class Human {
             throw new Error("dateBirth is null");
         }
         this.dateBirth = dateBirth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Human human = (Human) o;
+        return Objects.equals(fullName, human.fullName) &&
+                gender == human.gender &&
+                Objects.equals(dateBirth, human.dateBirth);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullName, gender, dateBirth);
     }
 
     @Override
