@@ -53,6 +53,7 @@ public class Terminal {
         humans.insert(new Human("bbb", Human.Gender.man, new LocalDate().minusYears(44)));
         humans.insert(new Human("r2d2", Human.Gender.man, new LocalDate().minusYears(13)));
         humans.insert(new Human("bbb", Human.Gender.man, new LocalDate().minusYears(44)));
+        humans.insert(new Human("r2d2", null, new LocalDate().minusYears(13)));
 
         while (command != 0) {
             printCommands();
