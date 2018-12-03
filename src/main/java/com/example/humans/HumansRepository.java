@@ -59,8 +59,12 @@ public class HumansRepository {
         if (human == null) {
             throw new Error("human is null");
         }
-        Human[] oneHumanArray = {human};
-        this.arrayHumans = concatHumans(this.arrayHumans, oneHumanArray);
+        if (this.getHumanById(human.getId()) != null) {
+            log.warn("Human not inserted! This human is already in the repository!");
+        } else {
+            Human[] oneHumanArray = {human};
+            this.arrayHumans = concatHumans(this.arrayHumans, oneHumanArray);
+        }
 
         log.info("Inserted "+human.toString());
         log.debug("end");
