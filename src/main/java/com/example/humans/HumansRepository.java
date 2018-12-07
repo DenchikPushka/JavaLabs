@@ -1,5 +1,7 @@
 package com.example.humans;
 
+import com.example.Injector;
+import com.example.annotations.AutoInjectable;
 import com.example.checkers.Checker;
 import com.example.sorters.Sorter;
 import org.apache.log4j.Logger;
@@ -10,17 +12,16 @@ import java.util.Comparator;
 public class HumansRepository {
     private static final Logger log = Logger.getLogger(HumansRepository.class);
     private Human[] arrayHumans;
-    private Sorter sorter;
+
+    @AutoInjectable
+    public Sorter sorter;
 
     /**
      * Creates a new and empty repository of humans with the choice of sorting.
-     * @param sorter object sorter defining used sorting
      */
-    public HumansRepository(Sorter sorter) {
-        log.debug("start. Input parameters: (sorter="+sorter+')');
-
+    public HumansRepository() {
+        log.debug("start)");
         this.arrayHumans = new Human[0];
-        this.sorter = sorter;
 
         log.info("Created "+this.toString());
         log.debug("end");

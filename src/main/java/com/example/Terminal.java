@@ -8,9 +8,6 @@ import com.example.comparators.HumanFullNameComparator;
 import com.example.comparators.HumanIdComparator;
 import com.example.humans.Human;
 import com.example.humans.HumansRepository;
-import com.example.sorters.BubbleSort;
-import com.example.sorters.QuickSort;
-import com.example.sorters.SelectionSort;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
@@ -21,30 +18,7 @@ public class Terminal {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         HumansRepository humans;
-        System.out.println("Выберите сортировку:");
-        System.out.println("1 - Пузырек");
-        System.out.println("2 - Быстрая");
-        System.out.println("3 - Выбором");
-        int sortType = scanner.nextInt();
-        scanner.nextLine();
-        switch (sortType) {
-            case 1:
-                humans = new HumansRepository(new BubbleSort());
-                System.out.println("Выбран пузырек");
-                break;
-            case 2:
-                humans = new HumansRepository(new QuickSort());
-                System.out.println("Выбрана быстрая сортировка");
-                break;
-            case 3:
-                humans = new HumansRepository(new SelectionSort());
-                System.out.println("Выбрана сортировка выбором");
-                break;
-            default:
-                humans = new HumansRepository(new BubbleSort());
-                System.out.println("По умолчанию выбран пузырек");
-                break;
-        }
+        humans = (HumansRepository) new Injector().inject(new HumansRepository());
 
         int command = 999;
         humans.insert(new Human("q1", Human.Gender.man, new LocalDate().minusYears(22)));

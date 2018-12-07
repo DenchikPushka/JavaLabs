@@ -1,7 +1,11 @@
 package com.example.humans;
 
+import com.example.Injector;
 import com.example.checkers.HumanAgeChecker;
 import com.example.checkers.HumanFullNameChecker;
+import com.example.comparators.HumanAgeComparator;
+import com.example.comparators.HumanFullNameComparator;
+import com.example.comparators.HumanIdComparator;
 import com.example.sorters.BubbleSort;
 import com.example.sorters.QuickSort;
 import com.example.sorters.SelectionSort;
@@ -16,7 +20,7 @@ public class HumansRepositoryTest {
     @Test
     public void insert() {
         Human expected = new Human("a1", Human.Gender.woman, new LocalDate());
-        HumansRepository humans = new HumansRepository(new QuickSort());
+        HumansRepository humans = (HumansRepository) new Injector().inject(new HumansRepository());
 
         humans.insert(expected);
         assertEquals(expected, humans.getHumanByIndex(0));
@@ -32,7 +36,7 @@ public class HumansRepositoryTest {
 
     @Test
     public void deleteById() {
-        HumansRepository actual = init(new QuickSort());
+        HumansRepository actual = init();
         Human human = new Human("a1", Human.Gender.woman, new LocalDate());
         Integer humanId = human.getId();
         actual.insert(human);
@@ -44,7 +48,7 @@ public class HumansRepositoryTest {
 
     @Test
     public void deleteByIndex() {
-        HumansRepository actual = init(new QuickSort());
+        HumansRepository actual = init();
         Human human = new Human("a1", Human.Gender.woman, new LocalDate());
         actual.insert(human);
         int humanIndex = actual.getLength() - 1;
@@ -56,7 +60,7 @@ public class HumansRepositoryTest {
 
     @Test
     public void getIndexById() {
-        HumansRepository actual = new HumansRepository(new QuickSort());
+        HumansRepository actual = (HumansRepository) new Injector().inject(new HumansRepository());
         Human human;
 
         assertEquals(-1, actual.getIndexById(1));
@@ -77,7 +81,7 @@ public class HumansRepositoryTest {
     @Test
     public void getHumanById() {
         Human expected;
-        HumansRepository actual = new HumansRepository(new QuickSort());
+        HumansRepository actual = (HumansRepository) new Injector().inject(new HumansRepository());
 
         expected = new Human("r2d2", Human.Gender.man, new LocalDate().minusYears(40));
         actual.insert(expected);
@@ -94,7 +98,7 @@ public class HumansRepositoryTest {
     @Test
     public void getHumanByIndex() {
         Human expected;
-        HumansRepository actual = init(new QuickSort());
+        HumansRepository actual = init();
 
         expected = new Human("r2d2", Human.Gender.man, new LocalDate().minusYears(40));
         assertEquals(expected, actual.getHumanByIndex(4));
@@ -108,28 +112,32 @@ public class HumansRepositoryTest {
 
     @Test
     public void getLength() {
-        assertEquals(0, new HumansRepository(new QuickSort()).getLength());
-        assertEquals(10, init(new QuickSort()).getLength());
+        HumansRepository humans = (HumansRepository) new Injector().inject(new HumansRepository());
+        assertEquals(0, humans.getLength());
+        assertEquals(10, init().getLength());
     }
 
     @Test
     public void sortBy() {
         HumansRepository actual;
 
-        actual = init(new BubbleSort());
+        actual = init();
+        actual.sortBy(new HumanFullNameComparator());
         assertEquals(10, actual.getLength());
 
-        actual = init(new QuickSort());
+        actual = init();
+        actual.sortBy(new HumanAgeComparator());
         assertEquals(10, actual.getLength());
 
-        actual = init(new SelectionSort());
+        actual = init();
+        actual.sortBy(new HumanIdComparator());
         assertEquals(10, actual.getLength());
     }
 
     @Test
     public void findBy() {
         Human[] expected, actual;
-        HumansRepository humans = init(new QuickSort());
+        HumansRepository humans = init();
 
         expected = new Human[]{
                 new Human("bbb", Human.Gender.man, new LocalDate().minusYears(44)),
@@ -151,8 +159,8 @@ public class HumansRepositoryTest {
         }
     }
 
-    private HumansRepository init(Sorter sorter) {
-        HumansRepository result = new HumansRepository(sorter);
+    private HumansRepository init() {
+        HumansRepository result = (HumansRepository) new Injector().inject(new HumansRepository());
         result.insert(new Human("0", Human.Gender.man, new LocalDate().minusYears(11)));
         result.insert(new Human("a", Human.Gender.man, new LocalDate().minusYears(14)));
         result.insert(new Human("aaa bbb", Human.Gender.man, new LocalDate().minusYears(4)));
