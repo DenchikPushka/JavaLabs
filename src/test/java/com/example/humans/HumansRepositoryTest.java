@@ -6,10 +6,6 @@ import com.example.checkers.HumanFullNameChecker;
 import com.example.comparators.HumanAgeComparator;
 import com.example.comparators.HumanFullNameComparator;
 import com.example.comparators.HumanIdComparator;
-import com.example.sorters.BubbleSort;
-import com.example.sorters.QuickSort;
-import com.example.sorters.SelectionSort;
-import com.example.sorters.Sorter;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
@@ -122,14 +118,13 @@ public class HumansRepositoryTest {
         HumansRepository actual;
 
         actual = init();
+
         actual.sortBy(new HumanFullNameComparator());
         assertEquals(10, actual.getLength());
 
-        actual = init();
         actual.sortBy(new HumanAgeComparator());
         assertEquals(10, actual.getLength());
 
-        actual = init();
         actual.sortBy(new HumanIdComparator());
         assertEquals(10, actual.getLength());
     }

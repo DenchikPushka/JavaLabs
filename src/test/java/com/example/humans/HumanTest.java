@@ -30,11 +30,6 @@ public class HumanTest {
 
     @Test
     public void getId() {
-        Human human;
-        human = new Human("aaa", Human.Gender.woman, new LocalDate());
-        assertEquals(Integer.valueOf(1), human.getId());
-        human = new Human("aaa", Human.Gender.woman, new LocalDate());
-        assertEquals(Integer.valueOf(2), human.getId());
     }
 
     @Test

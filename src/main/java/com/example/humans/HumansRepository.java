@@ -1,6 +1,5 @@
 package com.example.humans;
 
-import com.example.Injector;
 import com.example.annotations.AutoInjectable;
 import com.example.checkers.Checker;
 import com.example.sorters.Sorter;
