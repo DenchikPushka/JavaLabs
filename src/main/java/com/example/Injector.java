@@ -12,7 +12,7 @@ public class Injector {
     private static final Logger log = Logger.getLogger(Injector.class);
     private static final String propertiesPath = "src/main/resources/config.properties";
 
-    public Object inject(Object object) {
+    public<T> T inject(T object) {
         log.info("Injection start "+object.toString());
         Field[] fields = object.getClass().getDeclaredFields();
         Field field;
