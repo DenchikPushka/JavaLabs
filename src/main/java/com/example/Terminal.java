@@ -18,7 +18,7 @@ public class Terminal {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         HumansRepository humans;
-        humans = (HumansRepository) new Injector().inject(new HumansRepository());
+        humans = new Injector().inject(new HumansRepository());
 
         int command = 999;
         humans.insert(new Human("q1", Human.Gender.man, new LocalDate().minusYears(22)));

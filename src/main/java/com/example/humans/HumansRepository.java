@@ -13,7 +13,7 @@ public class HumansRepository {
     private Human[] arrayHumans;
 
     @AutoInjectable
-    public Sorter sorter;
+    private Sorter sorter;
 
     /**
      * Creates a new and empty repository of humans with the choice of sorting.
