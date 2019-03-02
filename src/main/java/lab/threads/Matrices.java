@@ -1,6 +1,5 @@
 package lab.threads;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Matrices {
@@ -26,6 +25,49 @@ public class Matrices {
                 }
             }
         }
+        return result;
+    }
+
+    public int[][] multiply2Threads() {
+        int h = a.length, w = b[0].length, l, h2;
+        int[][] a = this.a, b = this.b, result = new int[h][w];
+
+        if (a[0].length != b.length) {
+            return null;
+        }
+        l = b.length;
+        h2 = h / 2;
+
+        class HelperThread extends Thread {
+
+            @Override
+            public void run() {
+                for (int i = 0; i < h2; i++) {
+                    for (int j = w; j-- > 0;) {
+                        for (int k = l; k-- > 0;) {
+                            result[i][j] += a[i][k] * b[k][j];
+                        }
+                    }
+                }
+            }
+        }
+
+        HelperThread hThread = new HelperThread();
+        hThread.start();
+
+        for (int i = h; i-- > h2;) {
+            for (int j = w; j-- > 0;) {
+                for (int k = l; k-- > 0;) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        try {
+            hThread.join();
+        } catch(InterruptedException e){
+            System.out.println(e.toString());
+        }
+
         return result;
     }
 
