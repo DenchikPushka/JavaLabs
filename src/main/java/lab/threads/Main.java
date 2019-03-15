@@ -80,9 +80,9 @@ public class Main {
     private static void runBank() {
         Storage storage = new Storage(100000);
         Employee[] employees = {
-                new Employee(new LinkedList<>(), storage),
-                new Employee(new LinkedList<>(), storage),
-                new Employee(new LinkedList<>(), storage)
+                new Employee(new LinkedList<>(), storage, "Кассир 1"),
+                new Employee(new LinkedList<>(), storage, "Кассир 2"),
+                new Employee(new LinkedList<>(), storage, "Кассир 3")
         };
         Random random = new Random();
 
@@ -105,7 +105,6 @@ public class Main {
                     }
                 }
                 minEmployee.pushCustomer(randomCustomer);
-                System.out.println("Новый клиент");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
