@@ -12,15 +12,15 @@ public class Matrices {
     }
 
     public int[][] multiply() {
-        int h = a.length, w = b[0].length, l;
-        int[][] a = this.a, b = this.b, result = new int[h][w];
+        int height = a.length, width = b[0].length, passageLength;
+        int[][] a = this.a, b = this.b, result = new int[height][width];
         if (a[0].length != b.length) {
             return null;
         }
-        l = b.length;
-        for (int i = h; i-- > 0;) {
-            for (int j = w; j-- > 0;) {
-                for (int k = l; k-- > 0;) {
+        passageLength = b.length;
+        for (int i = height; i-- > 0;) {
+            for (int j = width; j-- > 0;) {
+                for (int k = passageLength; k-- > 0;) {
                     result[i][j] += a[i][k] * b[k][j];
                 }
             }
@@ -29,22 +29,21 @@ public class Matrices {
     }
 
     public int[][] multiply2Threads() {
-        int h = a.length, w = b[0].length, l, h2;
-        int[][] a = this.a, b = this.b, result = new int[h][w];
+        int height = a.length, width = b[0].length, passageLength, halfHeight;
+        int[][] a = this.a, b = this.b, result = new int[height][width];
 
         if (a[0].length != b.length) {
             return null;
         }
-        l = b.length;
-        h2 = h / 2;
+        passageLength = b.length;
+        halfHeight = height / 2;
 
         class HelperThread extends Thread {
-
             @Override
             public void run() {
-                for (int i = 0; i < h2; i++) {
-                    for (int j = w; j-- > 0;) {
-                        for (int k = l; k-- > 0;) {
+                for (int i = 0; i < halfHeight; i++) {
+                    for (int j = width; j-- > 0;) {
+                        for (int k = passageLength; k-- > 0;) {
                             result[i][j] += a[i][k] * b[k][j];
                         }
                     }
@@ -55,9 +54,9 @@ public class Matrices {
         HelperThread hThread = new HelperThread();
         hThread.start();
 
-        for (int i = h; i-- > h2;) {
-            for (int j = w; j-- > 0;) {
-                for (int k = l; k-- > 0;) {
+        for (int i = height; i-- > halfHeight;) {
+            for (int j = width; j-- > 0;) {
+                for (int k = passageLength; k-- > 0;) {
                     result[i][j] += a[i][k] * b[k][j];
                 }
             }
@@ -76,10 +75,10 @@ public class Matrices {
             return null;
         }
         int[][] result = new int[h][w];
-        Random rand = new Random();
+        Random random = new Random();
         for (int i = h; i-- > 0;) {
             for (int j = w; j-- > 0;) {
-                result[i][j] = rand.nextInt(100);
+                result[i][j] = random.nextInt(100);
             }
         }
         return result;

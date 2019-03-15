@@ -7,11 +7,11 @@ public class Storage {
         this.sum = sum;
     }
 
-    public double getSum() {
+    public synchronized double getSum() {
         return sum;
     }
 
-    public double bringOut(double sum) {
+    public synchronized double bringOut(double sum) {
         if (sum <= 0) {
             throw new Error("Incorrect sum");
         }
@@ -23,7 +23,7 @@ public class Storage {
         }
     }
 
-    public double bringIn(double sum) {
+    public synchronized double bringIn(double sum) {
         if (sum <= 0) {
             throw new Error("Incorrect sum");
         }

@@ -1,5 +1,7 @@
 package lab.threads;
 
+import java.util.Random;
+
 public class Customer {
     enum actionTypes {
         get,
@@ -15,6 +17,15 @@ public class Customer {
         this.sum = sum;
     }
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "action=" + action +
+                ", timeout=" + timeout +
+                ", sum=" + sum +
+                '}';
+    }
+
     public actionTypes getAction() {
         return action;
     }
@@ -25,6 +36,25 @@ public class Customer {
 
     public double getSum() {
         return sum;
+    }
+
+    public static Customer generateCustomer() {
+        Customer result;
+        int randomInt;
+        double randomDouble;
+        actionTypes action;
+
+        Random random = new Random();
+        randomInt = random.nextInt(2);
+        if (randomInt == 1) {
+            action = actionTypes.get;
+        } else {
+            action = actionTypes.set;
+        }
+        randomInt = random.nextInt(10000);
+        randomDouble = Math.ceil(random.nextDouble() * randomInt * 100) / 100;
+        result = new Customer(action, randomInt, randomDouble);
+        return result;
     }
 
 }
