@@ -82,7 +82,7 @@ public class Main {
     }
 
     private static void runBank() {
-        Storage storage = new Storage(100000);
+        Storage storage = new Storage(10000);
         Employee[] employees = {
                 new Employee(new LinkedList<>(), storage, "Кассир 1", "RED"),
                 new Employee(new LinkedList<>(), storage, "Кассир 2", "BLUE"),
@@ -91,26 +91,16 @@ public class Main {
         Random random = new Random();
 
         for (int i = 3; i-- > 0;) {
+            employees[i].setCurrentEmployees(employees);
             employees[i].start();
         }
 
         while (true) {
             Customer randomCustomer = Customer.generateCustomer();
-            Employee minEmployee = employees[0];
-            int minLength = minEmployee.getQueue().size(), temp;
-
             log.info("Пришел клиент "+randomCustomer);
-
-            for (int i = 3; i-- > 0;) {
-                temp = employees[i].getQueue().size();
-                if (temp < minLength) {
-                    minLength = temp;
-                    minEmployee = employees[i];
-                }
-            }
-            minEmployee.pushCustomer(randomCustomer);
+            Employee.selectQueue(employees, randomCustomer);
             try {
-                Thread.sleep(random.nextInt(3000));
+                Thread.sleep(random.nextInt(5000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

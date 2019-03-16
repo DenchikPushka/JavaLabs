@@ -1,7 +1,5 @@
 package lab.threads;
 
-import org.apache.log4j.Logger;
-
 public class Storage {
     private double sum;
 
@@ -9,18 +7,19 @@ public class Storage {
         this.sum = sum;
     }
 
-    public synchronized double getSum() {
+    public double getSum() {
         return sum;
     }
 
-    public synchronized void bringOut(double sum) {
+    public synchronized boolean bringOut(double sum) {
         if (sum <= 0) {
             throw new Error("Incorrect sum");
         }
         if (sum > this.sum) {
-            throw new Error("Big sum");
+            return false;
         } else {
             this.sum -= sum;
+            return true;
         }
     }
 

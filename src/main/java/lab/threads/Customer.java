@@ -51,7 +51,7 @@ public class Customer {
         } else {
             action = actionTypes.set;
         }
-        randomInt = random.nextInt(10000);
+        randomInt = random.nextInt(15000);
         randomDouble = (Math.ceil(random.nextDouble() * randomInt * 100) / 100) + 100;
         result = new Customer(action, randomInt, randomDouble);
         return result;

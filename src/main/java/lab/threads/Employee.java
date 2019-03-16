@@ -3,13 +3,13 @@ package lab.threads;
 import org.apache.log4j.Logger;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 public class Employee extends Thread {
     private static final Logger log = Logger.getLogger(Employee.class);
     private LinkedList<Customer> queue;
     private Storage storage;
     private String name, textColor;
+    private Employee[] currentEmployees;
 
     public Employee(LinkedList<Customer> queue, Storage storage, String name, String textColor) {
         this.queue = queue;
@@ -24,7 +24,7 @@ public class Employee extends Thread {
 
     public synchronized void pushCustomer(Customer customer) {
         queue.addLast(customer);
-        log.info(toColorText(this.name+": в очередь встал клиент "+customer.toString(), textColor));
+        log.info(toColorText(this.name+": клиент "+customer+" встал в очередь ", textColor));
         log.info(toColorText(this.name+": длина очереди - "+queue.size(), textColor));
     }
 
@@ -32,20 +32,35 @@ public class Employee extends Thread {
     public void run() {
         Customer customer;
         LinkedList<Customer> queue;
+        Customer.actionTypes action;
+        double sum;
         while (true) {
             queue = this.getQueue();
             if (queue.size() > 0) {
                 customer = queue.getFirst();
                 log.info(toColorText(this.name+": начал обработку клиента "+customer, textColor));
+                action = customer.getAction();
+                sum = customer.getSum();
                 try {
                     Thread.sleep(customer.getTimeout());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (customer.getAction() == Customer.actionTypes.set) {
-                    this.storage.bringIn(customer.getSum());
-                    log.info(toColorText(this.name+": внес сумму "+customer.getSum(), textColor));
+                if (action == Customer.actionTypes.set) {
+                    this.storage.bringIn(sum);
+                    log.info(toColorText(this.name+": внес сумму "+sum, textColor));
                     log.info(toColorText("Остаток хранилища: "+this.storage.getSum(), "YELLOW"));
+                } else {
+                    if (this.storage.bringOut(sum)) {
+                        log.info(toColorText(this.name+": снял сумму "+sum, textColor));
+                        log.info(toColorText("Остаток хранилища: "+this.storage.getSum(), "YELLOW"));
+                    } else {
+                        log.info(toColorText(this.name+": в хранилище недостаточно средств для клиента "+customer, textColor));
+                        queue.removeFirst();
+                        log.info(toColorText(this.name+": клиент "+customer+" вышел из очереди", textColor));
+                        selectQueue(this.currentEmployees, customer);
+                        continue;
+                    }
                 }
                 queue.removeFirst();
                 log.info(toColorText(this.name+": закончил обработку клиента "+customer, textColor));
@@ -53,9 +68,23 @@ public class Employee extends Thread {
             }
 
         }
-        /*ListIterator iterator = queue.listIterator();
-        while (iterator.hasNext())
-            System.out.println(iterator.next());*/
+    }
+
+    public void setCurrentEmployees(Employee[] currentEmployees) {
+        this.currentEmployees = currentEmployees;
+    }
+
+    public static void selectQueue(Employee[] employees, Customer customer) {
+        Employee minEmployee = employees[0];
+        int minLength = minEmployee.getQueue().size(), temp;
+        for (int i = 3; i-- > 0;) {
+            temp = employees[i].getQueue().size();
+            if (temp < minLength) {
+                minLength = temp;
+                minEmployee = employees[i];
+            }
+        }
+        minEmployee.pushCustomer(customer);
     }
 
     private static String toColorText(String text, String color) {
