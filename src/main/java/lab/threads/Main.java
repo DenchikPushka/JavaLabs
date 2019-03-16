@@ -1,8 +1,12 @@
 package lab.threads;
 
+import org.apache.log4j.Logger;
+
 import java.util.*;
 
 public class Main {
+    private static final Logger log = Logger.getLogger(Main.class);
+
     public static void main(String[] args) {
         int command = 999;
         Scanner scanner = new Scanner(System.in);
@@ -80,9 +84,9 @@ public class Main {
     private static void runBank() {
         Storage storage = new Storage(100000);
         Employee[] employees = {
-                new Employee(new LinkedList<>(), storage, "Кассир 1"),
-                new Employee(new LinkedList<>(), storage, "Кассир 2"),
-                new Employee(new LinkedList<>(), storage, "Кассир 3")
+                new Employee(new LinkedList<>(), storage, "Кассир 1", "RED"),
+                new Employee(new LinkedList<>(), storage, "Кассир 2", "BLUE"),
+                new Employee(new LinkedList<>(), storage, "Кассир 3", "GREEN")
         };
         Random random = new Random();
 
@@ -91,24 +95,25 @@ public class Main {
         }
 
         while (true) {
-            try {
-                Thread.sleep(random.nextInt(10000));
-                Customer randomCustomer = Customer.generateCustomer();
-                Employee minEmployee = employees[0];
-                int minLength = minEmployee.getQueue().size(), temp;
+            Customer randomCustomer = Customer.generateCustomer();
+            Employee minEmployee = employees[0];
+            int minLength = minEmployee.getQueue().size(), temp;
 
-                for (int i = 3; i-- > 0;) {
-                    temp = employees[i].getQueue().size();
-                    if (temp < minLength) {
-                        minLength = temp;
-                        minEmployee = employees[i];
-                    }
+            log.info("Пришел клиент "+randomCustomer);
+
+            for (int i = 3; i-- > 0;) {
+                temp = employees[i].getQueue().size();
+                if (temp < minLength) {
+                    minLength = temp;
+                    minEmployee = employees[i];
                 }
-                minEmployee.pushCustomer(randomCustomer);
+            }
+            minEmployee.pushCustomer(randomCustomer);
+            try {
+                Thread.sleep(random.nextInt(3000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }
