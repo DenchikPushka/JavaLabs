@@ -26,6 +26,7 @@ public class Employee extends Thread {
         queue.addLast(customer);
         log.info(toColorText(this.name+": клиент "+customer+" встал в очередь ", textColor));
         log.info(toColorText(this.name+": длина очереди - "+queue.size(), textColor));
+        notify();
     }
 
     @Override
@@ -65,8 +66,15 @@ public class Employee extends Thread {
                 queue.removeFirst();
                 log.info(toColorText(this.name+": закончил обработку клиента "+customer, textColor));
                 log.info(toColorText(this.name+": длина очереди - "+queue.size(), textColor));
+            } else {
+                try {
+                    synchronized (this) {
+                        wait();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-
         }
     }
 
