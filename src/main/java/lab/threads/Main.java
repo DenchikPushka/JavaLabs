@@ -21,6 +21,9 @@ public class Main {
                 case 1:
                     runMatrix();
                     break;
+                case 2:
+                    shellSort();
+                    break;
                 case 3:
                     runBank();
                     break;
@@ -105,5 +108,65 @@ public class Main {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void shellSort() {
+        ShellSort shellSorter = new ShellSort();
+        int size = 16;
+        int[] array;
+        long start, finish;
+
+        while (size < 10000000) {
+            System.out.println("================");
+            System.out.println("size: "+size);
+            System.out.println("----------------");
+
+            array = generateIntArray(size);
+            if (size < 50) {
+                printArray(array);
+            }
+            start = System.currentTimeMillis();
+            shellSorter.sort(array);
+            finish = System.currentTimeMillis();
+            if (size < 50) {
+                printArray(array);
+                System.out.println("----------------");
+            }
+            System.out.println("time sort: "+(finish - start));
+            System.out.println("----------------");
+
+            array = generateIntArray(size);
+            if (size < 50) {
+                printArray(array);
+            }
+            start = System.currentTimeMillis();
+            shellSorter.sort2Threads(array);
+            finish = System.currentTimeMillis();
+            if (size < 50) {
+                printArray(array);
+                System.out.println("----------------");
+            }
+            System.out.println("time sort2Threads: "+(finish - start));
+            System.out.println("----------------");
+
+            size = size << 1;
+        }
+
+    }
+
+    private static int[] generateIntArray(int length) {
+        int[] result = new int[length];
+        Random random = new Random();
+        for (int i = result.length; i-- > 0;) {
+            result[i] = random.nextInt(1000);
+        }
+        return result;
+    }
+
+    private static void printArray(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i]+" ");
+        }
+        System.out.println();
     }
 }
