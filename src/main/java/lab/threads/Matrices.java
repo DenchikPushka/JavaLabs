@@ -1,5 +1,6 @@
 package lab.threads;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Matrices {
@@ -28,9 +29,16 @@ public class Matrices {
         return result;
     }
 
-    public int[][] multiply2Threads(int threadsCount) {
-        int height = a.length, width = b[0].length, passageLength, beginHeight = 0, endHeight = 0;
+    public int[][] multiplyThreads(int threadsCount) {
+        int height = a.length,
+            width = b[0].length,
+            passageLength,
+            beginHeight = 0,
+            endHeight = 0,
+            step;
         int[][] a = this.a, b = this.b, result = new int[height][width];
+        ArrayList<HelperThread> hThreadsList = new ArrayList<>();
+        HelperThread hThread;
 
         if (a[0].length != b.length) {
             return null;
@@ -38,26 +46,36 @@ public class Matrices {
         if (threadsCount == 0) {
             return result;
         }
-        while ()
         passageLength = b.length;
-        halfHeight = height / 2;
 
-        HelperThread hThread = new HelperThread(0,0, passageLength, width, a, b, result);
-        hThread.start();
+        step = height / threadsCount;
+        endHeight = beginHeight + step;
+        while (endHeight <= height - step) {
+            System.out.println(beginHeight+" - "+endHeight);
+            hThread = new HelperThread(beginHeight,endHeight, passageLength, width, a, b, result);
+            hThreadsList.add(hThread);
+            hThread.start();
+            beginHeight = endHeight;
+            endHeight = beginHeight + step;
+        }
 
-        for (int i = height; i-- > halfHeight;) {
+        System.out.println("count hThreads: "+hThreadsList.size());
+
+        for (int i = beginHeight; i < height; i++) {
             for (int j = width; j-- > 0;) {
                 for (int k = passageLength; k-- > 0;) {
                     result[i][j] += a[i][k] * b[k][j];
                 }
             }
         }
-        try {
-            hThread.join();
-        } catch(InterruptedException e){
-            System.out.println(e.toString());
-        }
 
+        for (HelperThread item : hThreadsList) {
+            try {
+                item.join();
+            } catch(InterruptedException e){
+                System.out.println(e.toString());
+            }
+        }
         return result;
     }
 

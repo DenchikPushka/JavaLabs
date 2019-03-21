@@ -38,6 +38,7 @@ public class Main {
         int[][] result, a, b;
         long start, finish;
         int size = 2;
+        int countThreads = Runtime.getRuntime().availableProcessors();
 
         while (size < 1060) {
             System.out.println("================");
@@ -68,7 +69,7 @@ public class Main {
             System.out.println("----------------");
 
             start = System.currentTimeMillis();
-            result = new Matrices(a, b).multiply2Threads();
+            result = new Matrices(a, b).multiplyThreads(countThreads);
             finish = System.currentTimeMillis();
             if (size < 40) {
                 Matrices.printMatrix(result, 6);
