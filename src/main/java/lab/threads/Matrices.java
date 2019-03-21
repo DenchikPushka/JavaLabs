@@ -28,30 +28,21 @@ public class Matrices {
         return result;
     }
 
-    public int[][] multiply2Threads() {
-        int height = a.length, width = b[0].length, passageLength, halfHeight;
+    public int[][] multiply2Threads(int threadsCount) {
+        int height = a.length, width = b[0].length, passageLength, beginHeight = 0, endHeight = 0;
         int[][] a = this.a, b = this.b, result = new int[height][width];
 
         if (a[0].length != b.length) {
             return null;
         }
+        if (threadsCount == 0) {
+            return result;
+        }
+        while ()
         passageLength = b.length;
         halfHeight = height / 2;
 
-        class HelperThread extends Thread {
-            @Override
-            public void run() {
-                for (int i = 0; i < halfHeight; i++) {
-                    for (int j = width; j-- > 0;) {
-                        for (int k = passageLength; k-- > 0;) {
-                            result[i][j] += a[i][k] * b[k][j];
-                        }
-                    }
-                }
-            }
-        }
-
-        HelperThread hThread = new HelperThread();
+        HelperThread hThread = new HelperThread(0,0, passageLength, width, a, b, result);
         hThread.start();
 
         for (int i = height; i-- > halfHeight;) {
@@ -90,6 +81,32 @@ public class Matrices {
                 System.out.print(String.format("%0"+l+"d", a[i][j])+" ");
             }
             System.out.println();
+        }
+    }
+
+    class HelperThread extends Thread {
+        private int beginRow, endRow, passageLength, width;
+        private int[][] a, b, result;
+
+        public HelperThread(int beginRow, int endRow, int passageLength, int width, int[][] a, int[][] b, int[][] result) {
+            this.beginRow = beginRow;
+            this.endRow = endRow;
+            this.passageLength = passageLength;
+            this.width = width;
+            this.a = a;
+            this.b = b;
+            this.result = result;
+        }
+
+        @Override
+        public void run() {
+            for (int i = beginRow; i < endRow; i++) {
+                for (int j = width; j-- > 0;) {
+                    for (int k = passageLength; k-- > 0;) {
+                        result[i][j] += a[i][k] * b[k][j];
+                    }
+                }
+            }
         }
     }
 
