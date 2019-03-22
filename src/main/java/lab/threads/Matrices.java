@@ -49,14 +49,16 @@ public class Matrices {
         passageLength = b.length;
 
         step = height / threadsCount;
-        endHeight = beginHeight + step;
-        while (endHeight <= height - step) {
-            System.out.println(beginHeight+" - "+endHeight);
-            hThread = new HelperThread(beginHeight, endHeight, passageLength, width, a, b, result);
-            hThreadsList.add(hThread);
-            hThread.start();
-            beginHeight = endHeight;
+        if (step > 1) {
             endHeight = beginHeight + step;
+            while (endHeight <= height - step) {
+                System.out.println(beginHeight + " - " + endHeight);
+                hThread = new HelperThread(beginHeight, endHeight, passageLength, width, a, b, result);
+                hThreadsList.add(hThread);
+                hThread.start();
+                beginHeight = endHeight;
+                endHeight = beginHeight + step;
+            }
         }
 
         System.out.println("count hThreads: "+hThreadsList.size());
