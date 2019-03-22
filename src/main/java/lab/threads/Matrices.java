@@ -34,7 +34,7 @@ public class Matrices {
             width = b[0].length,
             passageLength,
             beginHeight = 0,
-            endHeight = 0,
+            endHeight,
             step;
         int[][] a = this.a, b = this.b, result = new int[height][width];
         ArrayList<HelperThread> hThreadsList = new ArrayList<>();
@@ -52,7 +52,7 @@ public class Matrices {
         endHeight = beginHeight + step;
         while (endHeight <= height - step) {
             System.out.println(beginHeight+" - "+endHeight);
-            hThread = new HelperThread(beginHeight,endHeight, passageLength, width, a, b, result);
+            hThread = new HelperThread(beginHeight, endHeight, passageLength, width, a, b, result);
             hThreadsList.add(hThread);
             hThread.start();
             beginHeight = endHeight;

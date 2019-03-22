@@ -40,7 +40,7 @@ public class Main {
         int size = 2;
         int countThreads = Runtime.getRuntime().availableProcessors();
 
-        while (size < 1060) {
+        while (size < 1030) {
             System.out.println("================");
             a = Matrices.generateMatrix(size, size);
             b = Matrices.generateMatrix(size, size);
@@ -75,12 +75,12 @@ public class Main {
                 Matrices.printMatrix(result, 6);
                 System.out.println("----------------");
             }
-            System.out.println("time multiply2Threads: "+(finish - start));
+            System.out.println("time multiplyThreads: "+(finish - start));
             System.out.println("----------------");
             if (size < 1024) {
                 size = size << 1;
             } else {
-                size += 10;
+                size++;
             }
         }
     }
@@ -116,8 +116,9 @@ public class Main {
         int size = 16;
         int[] array;
         long start, finish;
+        int countThreads = Runtime.getRuntime().availableProcessors();
 
-        while (size < 10000000) {
+        while (size < 9000000) {
             System.out.println("================");
             System.out.println("size: "+size);
             System.out.println("----------------");
@@ -141,13 +142,13 @@ public class Main {
                 printArray(array);
             }
             start = System.currentTimeMillis();
-            shellSorter.sort2Threads(array);
+            shellSorter.sortThreads(array, countThreads);
             finish = System.currentTimeMillis();
             if (size < 50) {
                 printArray(array);
                 System.out.println("----------------");
             }
-            System.out.println("time sort2Threads: "+(finish - start));
+            System.out.println("time sortThreads: "+(finish - start));
             System.out.println("----------------");
 
             size = size << 1;

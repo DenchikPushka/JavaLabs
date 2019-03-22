@@ -1,5 +1,7 @@
 package lab.threads;
 
+import java.util.ArrayList;
+
 public class ShellSort {
     public void sort (int[] arr) {
         int increment = arr.length / 2;
@@ -25,34 +27,47 @@ public class ShellSort {
         }
     }
 
-    public void sort2Threads (int[] arr) {
-        int increment = arr.length / 2,
-            increment2 = arr.length / 4;
+    public void sortThreads (int[] arr, int countThreads) {
+        if (countThreads == 0) {
+            return;
+        }
+        int increment = arr.length >> 1;
+        ArrayList<HelperThread> hThreadsList = new ArrayList<>();
+        HelperThread hThread;
 
-        HelperThread helperThread = new HelperThread(arr, increment2);
-        helperThread.start();
+        for (int i = 1; i < countThreads; i++) {
+            hThread = new HelperThread(arr, increment >> i, countThreads);
+            hThreadsList.add(hThread);
+            hThread.start();
+        }
+
+        System.out.println("count hThreads: "+hThreadsList.size());
 
         while (increment >= 1) {
             for (int startIndex = 0; startIndex < increment; startIndex++) {
                 insertionSort(arr, startIndex, increment);
             }
-            increment = increment >> 2;
-            //System.out.println("1T: "+increment);
+            increment = increment >> countThreads;
         }
-        try {
-            helperThread.join();
-        } catch(InterruptedException e){
-            System.out.println(e.toString());
+
+        for (HelperThread item : hThreadsList) {
+            try {
+                item.join();
+            } catch(InterruptedException e){
+                System.out.println(e.toString());
+            }
         }
     }
 
     private class HelperThread extends Thread {
         private int[] arr;
         private int increment;
+        private int countThreads;
 
-        public HelperThread(int[] arr, int increment) {
+        public HelperThread(int[] arr, int increment, int countThreads) {
             this.arr = arr;
             this.increment = increment;
+            this.countThreads = countThreads;
         }
 
         @Override
@@ -61,8 +76,7 @@ public class ShellSort {
                 for (int startIndex = 0; startIndex < increment; startIndex++) {
                     insertionSort(arr, startIndex, increment);
                 }
-                increment = increment >> 2;
-                //System.out.println("2T: "+increment);
+                increment = increment >> countThreads;
             }
         }
     }
