@@ -5,9 +5,22 @@ import com.example.checkers.Checker;
 import com.example.sorters.Sorter;
 import org.apache.log4j.Logger;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlElement;
+
+@XmlType(propOrder = { "arrayHumans" })
+@XmlRootElement
 public class HumansRepository {
     private static final Logger log = Logger.getLogger(HumansRepository.class);
     private Human[] arrayHumans;
@@ -24,6 +37,16 @@ public class HumansRepository {
 
         log.info("Created "+this.toString());
         log.debug("end");
+    }
+
+    @XmlElementWrapper(name = "humans")
+    @XmlElement(name = "human")
+    private Human[] getArrayHumans() {
+        return arrayHumans;
+    }
+
+    private void setArrayHumans(Human[] arrayHumans) {
+        this.arrayHumans = arrayHumans;
     }
 
     /**
@@ -222,6 +245,37 @@ public class HumansRepository {
             throw ex;
         }
         log.debug("return "+ Arrays.toString(result));
+        return result;
+    }
+
+    public String exportToXML() {
+        StringWriter writer = new StringWriter();
+        JAXBContext context = null;
+        try {
+            context = JAXBContext.newInstance(HumansRepository.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(this, writer);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+        String result = writer.toString();
+        System.out.println(result);
+        return result;
+    }
+
+    public static HumansRepository importFromXML(String xmldata) {
+        HumansRepository result = null;
+        StringReader reader = new StringReader(xmldata);
+        JAXBContext context = null;
+        try {
+            context = JAXBContext.newInstance(HumansRepository.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            result = (HumansRepository) unmarshaller.unmarshal(reader);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 

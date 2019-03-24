@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 public class Terminal {
     public static void main(String[] args) {
+        String strxml = "";
         Scanner scanner = new Scanner(System.in);
         HumansRepository humans;
         humans = new Injector().inject(new HumansRepository());
@@ -54,6 +55,12 @@ public class Terminal {
                 case 6:
                     findHumans(humans);
                     break;
+                case 9:
+                    strxml = humans.exportToXML();
+                    break;
+                case 10:
+                    humans = HumansRepository.importFromXML(strxml);
+                    break;
                 default:
                     System.out.println("Комманда не найдена");
                     break;
@@ -69,6 +76,8 @@ public class Terminal {
         System.out.println("4: Вывести репозиторий");
         System.out.println("5: Отсортировать репозиторий");
         System.out.println("6: Поиск человека");
+        System.out.println("9: JAXB export");
+        System.out.println("10: JAXB import");
         System.out.println("0: Выход");
         System.out.println("----------------------------------------");
     }

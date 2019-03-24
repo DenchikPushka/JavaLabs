@@ -2,9 +2,17 @@ package com.example.humans;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Objects;
 
+@XmlType(propOrder = { "id", "fullName", "gender", "dateBirth"})
 public class Human {
     private static final Logger log = Logger.getLogger(Human.class);
     /**
@@ -19,6 +27,7 @@ public class Human {
     private LocalDate dateBirth;
     private Integer id;
     private static int objectsCount = 1;
+    private static int maxId = 1;
 
     /**
      * Constructs a new human and set him an id.
@@ -42,6 +51,10 @@ public class Human {
         log.debug("end");
     }
 
+    public Human() {
+        objectsCount++;
+    }
+
     /**
      * Returns a human's age.
      * @return number of full years
@@ -60,10 +73,19 @@ public class Human {
         return result;
     }
 
+    @XmlElement(name = "id")
     public Integer getId() {
         return id;
     }
 
+    private void setId(Integer id) {
+        this.id = id;
+        if (id > maxId) {
+            maxId = id;
+        }
+    }
+
+    @XmlElement(name = "fullName")
     public String getFullName() {
         return fullName;
     }
@@ -76,6 +98,7 @@ public class Human {
         log.info(this.toString());
     }
 
+    @XmlElement(name = "gender")
     public Gender getGender() {
         return gender;
     }
@@ -88,8 +111,14 @@ public class Human {
         log.info(this.toString());
     }
 
+    @XmlElement(name = "dateBirth")
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public LocalDate getDateBirth() {
         return dateBirth;
+    }
+
+    public String getStringDateBirth() {
+        return dateBirth.toString();
     }
 
     public void setDateBirth(LocalDate dateBirth) {
@@ -123,5 +152,20 @@ public class Human {
                 ", dateBirth=" + dateBirth +
                 ", id=" + id +
                 '}';
+    }
+}
+
+class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
+    private static DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+    @Override
+    public LocalDate unmarshal(String date) throws Exception {
+        return dtf.parseLocalDate(date);
+    }
+
+    @Override
+    public String marshal(LocalDate date) throws Exception {
+        return dtf.print(date);
+
     }
 }
