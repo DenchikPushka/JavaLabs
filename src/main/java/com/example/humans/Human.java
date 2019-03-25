@@ -5,14 +5,13 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Objects;
 
-@XmlType(propOrder = { "id", "fullName", "gender", "dateBirth"})
+@XmlType(propOrder = { "fullName", "gender", "dateBirth"})
 public class Human {
     private static final Logger log = Logger.getLogger(Human.class);
     /**
@@ -27,7 +26,6 @@ public class Human {
     private LocalDate dateBirth;
     private Integer id;
     private static int objectsCount = 1;
-    private static int maxId = 1;
 
     /**
      * Constructs a new human and set him an id.
@@ -52,6 +50,7 @@ public class Human {
     }
 
     public Human() {
+        this.id = objectsCount;
         objectsCount++;
     }
 
@@ -73,16 +72,8 @@ public class Human {
         return result;
     }
 
-    @XmlElement(name = "id")
     public Integer getId() {
         return id;
-    }
-
-    private void setId(Integer id) {
-        this.id = id;
-        if (id > maxId) {
-            maxId = id;
-        }
     }
 
     @XmlElement(name = "fullName")
