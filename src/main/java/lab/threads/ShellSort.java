@@ -41,7 +41,7 @@ public class ShellSort {
             hThread.start();
         }
 
-        System.out.println("count hThreads: "+hThreadsList.size());
+        //System.out.println("count hThreads: "+hThreadsList.size());
 
         while (increment >= 1) {
             for (int startIndex = 0; startIndex < increment; startIndex++) {

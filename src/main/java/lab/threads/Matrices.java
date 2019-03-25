@@ -52,7 +52,7 @@ public class Matrices {
         if (step > 1) {
             endHeight = beginHeight + step;
             while (endHeight <= height - step) {
-                System.out.println(beginHeight + " - " + endHeight);
+                //System.out.println(beginHeight + " - " + endHeight);
                 hThread = new HelperThread(beginHeight, endHeight, passageLength, width, a, b, result);
                 hThreadsList.add(hThread);
                 hThread.start();
@@ -61,7 +61,7 @@ public class Matrices {
             }
         }
 
-        System.out.println("count hThreads: "+hThreadsList.size());
+        //System.out.println("count hThreads: "+hThreadsList.size());
 
         for (int i = beginHeight; i < height; i++) {
             for (int j = width; j-- > 0;) {
