@@ -5,6 +5,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -76,7 +77,7 @@ public class Human {
         return id;
     }
 
-    @XmlElement(name = "fullName")
+    @XmlAttribute(name = "fullName")
     public String getFullName() {
         return fullName;
     }
@@ -89,7 +90,7 @@ public class Human {
         log.info(this.toString());
     }
 
-    @XmlElement(name = "gender")
+    @XmlAttribute(name = "gender")
     public Gender getGender() {
         return gender;
     }
@@ -102,7 +103,7 @@ public class Human {
         log.info(this.toString());
     }
 
-    @XmlElement(name = "dateBirth")
+    @XmlAttribute(name = "dateBirth")
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public LocalDate getDateBirth() {
         return dateBirth;

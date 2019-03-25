@@ -321,10 +321,22 @@ public class HumansRepository {
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            lastElementName = qName;
+            if (qName.equals("human")) {
+                fullName = attributes.getValue("fullName");
+                String gend = attributes.getValue("gender");
+                dateBirth = dtf.parseLocalDate(attributes.getValue("dateBirth"));
+                if (gend != null) {
+                    if (gend.equals("man")) {
+                        gender = Human.Gender.man;
+                    } else if (gend.equals("woman")) {
+                        gender = Human.Gender.woman;
+                    }
+                }
+                staticHumans.insert(new Human(fullName, gender, dateBirth));
+            }
         }
 
-        @Override
+        /*@Override
         public void characters(char[] ch, int start, int length) throws SAXException {
             String information = new String(ch, start, length);
 
@@ -342,19 +354,20 @@ public class HumansRepository {
                     }
                 }
                 if (lastElementName.equals("dateBirth")) {
-                    dateBirth = dtf.parseLocalDate(lastElementName);
+                    dateBirth = dtf.parseLocalDate(information);
                 }
             }
         }
 
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
+            if (fullName != null && gender != null && dateBirth != null) {
                 staticHumans.insert(new Human(fullName, gender, dateBirth));
-                System.out.println(staticHumans);
                 fullName = null;
                 gender = null;
                 dateBirth = null;
-        }
+            }
+        }*/
     }
 
 }
