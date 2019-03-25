@@ -36,7 +36,7 @@ public class Human {
     public Human(String fullName, Gender gender, LocalDate dateBirth) {
         log.debug("start. Input parameters: (fullName='"+fullName+"', gender="+gender+", dateBirth="+dateBirth+')');
 
-        if (fullName.isEmpty() || gender == null || dateBirth == null) {
+        if ((fullName == null || fullName.isEmpty()) || gender == null || dateBirth == null) {
             log.warn("Empty parameter found!");
         }
         this.fullName = fullName;
@@ -144,19 +144,21 @@ public class Human {
                 ", id=" + id +
                 '}';
     }
-}
 
-class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
-    private static DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private static class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
+        private static DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-    @Override
-    public LocalDate unmarshal(String date) throws Exception {
-        return dtf.parseLocalDate(date);
+        @Override
+        public LocalDate unmarshal(String date) throws Exception {
+            return dtf.parseLocalDate(date);
+        }
+
+        @Override
+        public String marshal(LocalDate date) throws Exception {
+            return dtf.print(date);
+
+        }
     }
 
-    @Override
-    public String marshal(LocalDate date) throws Exception {
-        return dtf.print(date);
-
-    }
 }
+

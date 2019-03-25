@@ -23,9 +23,9 @@ public class Terminal {
 
         int command = 999;
         humans.insert(new Human("q1", Human.Gender.man, new LocalDate().minusYears(22)));
-        humans.insert(new Human("w1", Human.Gender.man, new LocalDate().minusYears(12)));
+        humans.insert(new Human("w1", Human.Gender.woman, new LocalDate().minusYears(12)));
         humans.insert(new Human("aaa bbb", Human.Gender.man, new LocalDate().minusYears(11)));
-        humans.insert(new Human("bbb", Human.Gender.man, new LocalDate().minusYears(44)));
+        humans.insert(new Human("bbb", Human.Gender.woman, new LocalDate().minusYears(44)));
         humans.insert(new Human("r2d2", Human.Gender.man, new LocalDate().minusYears(13)));
         humans.insert(new Human("bbb", Human.Gender.man, new LocalDate().minusYears(44)));
         humans.insert(new Human("r2d2", null, new LocalDate().minusYears(13)));
@@ -56,10 +56,13 @@ public class Terminal {
                     findHumans(humans);
                     break;
                 case 9:
-                    strxml = humans.exportToXML();
+                    strxml = humans.exportToXMLJAXB();
                     break;
                 case 10:
-                    humans = HumansRepository.importFromXML(strxml);
+                    humans = HumansRepository.importFromXMLJAXB(strxml);
+                    break;
+                case 12:
+                    humans = HumansRepository.importFromXMLSAX(strxml);
                     break;
                 default:
                     System.out.println("Комманда не найдена");
@@ -78,6 +81,7 @@ public class Terminal {
         System.out.println("6: Поиск человека");
         System.out.println("9: JAXB export");
         System.out.println("10: JAXB import");
+        System.out.println("12: SAX import");
         System.out.println("0: Выход");
         System.out.println("----------------------------------------");
     }

@@ -4,7 +4,16 @@ import com.example.annotations.AutoInjectable;
 import com.example.checkers.Checker;
 import com.example.sorters.Sorter;
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -18,6 +27,9 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 @XmlType(propOrder = { "arrayHumans" })
 @XmlRootElement
@@ -248,7 +260,7 @@ public class HumansRepository {
         return result;
     }
 
-    public String exportToXML() {
+    public String exportToXMLJAXB() {
         StringWriter writer = new StringWriter();
         JAXBContext context = null;
         try {
@@ -265,7 +277,7 @@ public class HumansRepository {
         return result;
     }
 
-    public static HumansRepository importFromXML(String xmldata) {
+    public static HumansRepository importFromXMLJAXB(String xmldata) {
         HumansRepository result = null;
         StringReader reader = new StringReader(xmldata);
         JAXBContext context = null;
@@ -286,4 +298,63 @@ public class HumansRepository {
                 ", sorter=" + sorter +
                 '}';
     }
+
+    private static HumansRepository staticHumans = new HumansRepository();
+
+    public static HumansRepository importFromXMLSAX(String xmldata) {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        AdvancedXMLHandler handler = new AdvancedXMLHandler();
+        try {
+            SAXParser parser = factory.newSAXParser();
+            parser.parse(new InputSource(new StringReader(xmldata)), handler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return staticHumans;
+    }
+
+    private static class AdvancedXMLHandler extends DefaultHandler {
+        private String fullName, lastElementName;
+        private Human.Gender gender;
+        private LocalDate dateBirth;
+        private static DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+            lastElementName = qName;
+        }
+
+        @Override
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            String information = new String(ch, start, length);
+
+            information = information.replace("\n", "").trim();
+
+            if (!information.isEmpty()) {
+                if (lastElementName.equals("fullName")) {
+                    fullName = information;
+                }
+                if (lastElementName.equals("gender")) {
+                    if (information.equals("man")) {
+                        gender = Human.Gender.man;
+                    } else if (information.equals("woman")) {
+                        gender = Human.Gender.woman;
+                    }
+                }
+                if (lastElementName.equals("dateBirth")) {
+                    dateBirth = dtf.parseLocalDate(lastElementName);
+                }
+            }
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+                staticHumans.insert(new Human(fullName, gender, dateBirth));
+                System.out.println(staticHumans);
+                fullName = null;
+                gender = null;
+                dateBirth = null;
+        }
+    }
+
 }
