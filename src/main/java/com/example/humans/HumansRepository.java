@@ -3,19 +3,21 @@ package com.example.humans;
 import com.example.annotations.AutoInjectable;
 import com.example.checkers.Checker;
 import com.example.sorters.Sorter;
+import com.sun.jndi.toolkit.url.Uri;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -27,9 +29,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.*;
 
 @XmlType(propOrder = { "arrayHumans" })
 @XmlRootElement
@@ -260,6 +260,56 @@ public class HumansRepository {
         return result;
     }
 
+    private static String getNodeValue(NamedNodeMap attributes, String name) {
+        String result = null;
+        Node node = attributes.getNamedItem(name);
+        if (node != null) {
+            result = node.getNodeValue();
+        }
+        return  result;
+    }
+
+    public static HumansRepository importFromXMLDOM(String xmldata) {
+        HumansRepository result = new HumansRepository();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        Document document = null;
+        DocumentBuilder builder = null;
+        Node node;
+
+        String fullName;
+        Human.Gender gender;
+        LocalDate dateBirth;
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+        try {
+            builder = factory.newDocumentBuilder();
+            document = builder.parse(new InputSource(new StringReader(xmldata)));
+            NodeList humanElements = document.getDocumentElement().getElementsByTagName("human");
+
+            for (int i = 0; i < humanElements.getLength(); i++) {
+                Node employee = humanElements.item(i);
+                NamedNodeMap attributes = employee.getAttributes();
+                fullName = null;
+                gender = null;
+                dateBirth = null;
+                fullName = getNodeValue(attributes, "fullName");
+                String gend = getNodeValue(attributes,"gender");
+                dateBirth = dtf.parseLocalDate(getNodeValue(attributes, "dateBirth"));
+                if (gend != null) {
+                    if (gend.equals("man")) {
+                        gender = Human.Gender.man;
+                    } else if (gend.equals("woman")) {
+                        gender = Human.Gender.woman;
+                    }
+                }
+                result.insert(new Human(fullName, gender, dateBirth));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public String exportToXMLJAXB() {
         StringWriter writer = new StringWriter();
         JAXBContext context = null;
@@ -322,6 +372,9 @@ public class HumansRepository {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             if (qName.equals("human")) {
+                fullName = null;
+                gender = null;
+                dateBirth = null;
                 fullName = attributes.getValue("fullName");
                 String gend = attributes.getValue("gender");
                 dateBirth = dtf.parseLocalDate(attributes.getValue("dateBirth"));

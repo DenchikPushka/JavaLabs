@@ -26,7 +26,7 @@ public class Terminal {
         humans.insert(new Human("w1", Human.Gender.woman, new LocalDate().minusYears(12)));
         humans.insert(new Human("aaa bbb", Human.Gender.man, new LocalDate().minusYears(11)));
         humans.insert(new Human("bbb", Human.Gender.woman, new LocalDate().minusYears(44)));
-        humans.insert(new Human("r2d2", Human.Gender.man, new LocalDate().minusYears(13)));
+        humans.insert(new Human("test", Human.Gender.man, new LocalDate().minusYears(1)));
         humans.insert(new Human("bbb", Human.Gender.man, new LocalDate().minusYears(44)));
         humans.insert(new Human("r2d2", null, new LocalDate().minusYears(13)));
 
@@ -55,6 +55,9 @@ public class Terminal {
                 case 6:
                     findHumans(humans);
                     break;
+                case 8:
+                    humans = HumansRepository.importFromXMLDOM(strxml);
+                    break;
                 case 9:
                     strxml = humans.exportToXMLJAXB();
                     break;
@@ -79,6 +82,7 @@ public class Terminal {
         System.out.println("4: Вывести репозиторий");
         System.out.println("5: Отсортировать репозиторий");
         System.out.println("6: Поиск человека");
+        System.out.println("8: DOM import");
         System.out.println("9: JAXB export");
         System.out.println("10: JAXB import");
         System.out.println("12: SAX import");
