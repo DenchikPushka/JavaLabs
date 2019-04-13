@@ -8,10 +8,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -30,6 +27,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.parsers.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 @XmlType(propOrder = { "arrayHumans" })
 @XmlRootElement
@@ -269,12 +270,60 @@ public class HumansRepository {
         return  result;
     }
 
-    public static HumansRepository importFromXMLDOM(String xmldata) {
+    public String exportToXMLDOM() {
+        String result = null;
+        try {
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+
+            Element humansRepository = document.createElement("humansRepository");
+            document.appendChild(humansRepository);
+
+            Element humans = document.createElement("humans");
+            humansRepository.appendChild(humans);
+
+            Element human;
+
+            for (int i = 0; i < this.arrayHumans.length; i++) {
+                human = document.createElement("human");
+                humans.appendChild(human);
+
+                String fullName = this.arrayHumans[i].getFullName(),
+                        dateBirth = this.arrayHumans[i].getStringDateBirth();
+                Human.Gender gender = this.arrayHumans[i].getGender();
+
+                if (fullName != null) {
+                    human.setAttribute("fullName", fullName);
+                }
+                if (gender != null) {
+                    human.setAttribute("gender", gender.toString());
+                }
+                if (dateBirth != null) {
+                    human.setAttribute("dateBirth", dateBirth);
+                }
+            }
+
+
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer;
+
+            transformer = tf.newTransformer();
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(document), new StreamResult(writer));
+            result = writer.toString();
+
+            System.out.println(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static HumansRepository importFromXMLDOM(String xmlData) {
         HumansRepository result = new HumansRepository();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        Document document = null;
-        DocumentBuilder builder = null;
-        Node node;
+        Document document;
+        DocumentBuilder builder;
 
         String fullName;
         Human.Gender gender;
@@ -283,22 +332,20 @@ public class HumansRepository {
 
         try {
             builder = factory.newDocumentBuilder();
-            document = builder.parse(new InputSource(new StringReader(xmldata)));
+            document = builder.parse(new InputSource(new StringReader(xmlData)));
             NodeList humanElements = document.getDocumentElement().getElementsByTagName("human");
 
             for (int i = 0; i < humanElements.getLength(); i++) {
                 Node employee = humanElements.item(i);
                 NamedNodeMap attributes = employee.getAttributes();
-                fullName = null;
                 gender = null;
-                dateBirth = null;
                 fullName = getNodeValue(attributes, "fullName");
-                String gend = getNodeValue(attributes,"gender");
+                String genderString = getNodeValue(attributes,"gender");
                 dateBirth = dtf.parseLocalDate(getNodeValue(attributes, "dateBirth"));
-                if (gend != null) {
-                    if (gend.equals("man")) {
+                if (genderString != null) {
+                    if (genderString.equals("man")) {
                         gender = Human.Gender.man;
-                    } else if (gend.equals("woman")) {
+                    } else if (genderString.equals("woman")) {
                         gender = Human.Gender.woman;
                     }
                 }
@@ -312,7 +359,7 @@ public class HumansRepository {
 
     public String exportToXMLJAXB() {
         StringWriter writer = new StringWriter();
-        JAXBContext context = null;
+        JAXBContext context;
         try {
             context = JAXBContext.newInstance(HumansRepository.class);
             Marshaller marshaller = context.createMarshaller();
@@ -327,10 +374,10 @@ public class HumansRepository {
         return result;
     }
 
-    public static HumansRepository importFromXMLJAXB(String xmldata) {
+    public static HumansRepository importFromXMLJAXB(String xmlData) {
         HumansRepository result = null;
-        StringReader reader = new StringReader(xmldata);
-        JAXBContext context = null;
+        StringReader reader = new StringReader(xmlData);
+        JAXBContext context;
         try {
             context = JAXBContext.newInstance(HumansRepository.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -351,12 +398,12 @@ public class HumansRepository {
 
     private static HumansRepository staticHumans = new HumansRepository();
 
-    public static HumansRepository importFromXMLSAX(String xmldata) {
+    public static HumansRepository importFromXMLSAX(String xmlData) {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         AdvancedXMLHandler handler = new AdvancedXMLHandler();
         try {
             SAXParser parser = factory.newSAXParser();
-            parser.parse(new InputSource(new StringReader(xmldata)), handler);
+            parser.parse(new InputSource(new StringReader(xmlData)), handler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -364,63 +411,30 @@ public class HumansRepository {
     }
 
     private static class AdvancedXMLHandler extends DefaultHandler {
-        private String fullName, lastElementName;
+        private String fullName;
         private Human.Gender gender;
         private LocalDate dateBirth;
         private static DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
 
         @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        public void startElement(String uri, String localName, String qName, Attributes attributes) {
             if (qName.equals("human")) {
                 fullName = null;
                 gender = null;
                 dateBirth = null;
                 fullName = attributes.getValue("fullName");
-                String gend = attributes.getValue("gender");
+                String genderString = attributes.getValue("gender");
                 dateBirth = dtf.parseLocalDate(attributes.getValue("dateBirth"));
-                if (gend != null) {
-                    if (gend.equals("man")) {
+                if (genderString != null) {
+                    if (genderString.equals("man")) {
                         gender = Human.Gender.man;
-                    } else if (gend.equals("woman")) {
+                    } else if (genderString.equals("woman")) {
                         gender = Human.Gender.woman;
                     }
                 }
                 staticHumans.insert(new Human(fullName, gender, dateBirth));
             }
         }
-
-        /*@Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            String information = new String(ch, start, length);
-
-            information = information.replace("\n", "").trim();
-
-            if (!information.isEmpty()) {
-                if (lastElementName.equals("fullName")) {
-                    fullName = information;
-                }
-                if (lastElementName.equals("gender")) {
-                    if (information.equals("man")) {
-                        gender = Human.Gender.man;
-                    } else if (information.equals("woman")) {
-                        gender = Human.Gender.woman;
-                    }
-                }
-                if (lastElementName.equals("dateBirth")) {
-                    dateBirth = dtf.parseLocalDate(information);
-                }
-            }
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (fullName != null && gender != null && dateBirth != null) {
-                staticHumans.insert(new Human(fullName, gender, dateBirth));
-                fullName = null;
-                gender = null;
-                dateBirth = null;
-            }
-        }*/
     }
 
 }

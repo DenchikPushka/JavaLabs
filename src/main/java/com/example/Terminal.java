@@ -55,6 +55,9 @@ public class Terminal {
                 case 6:
                     findHumans(humans);
                     break;
+                case 7:
+                    strxml = humans.exportToXMLDOM();
+                    break;
                 case 8:
                     humans = HumansRepository.importFromXMLDOM(strxml);
                     break;
@@ -82,6 +85,7 @@ public class Terminal {
         System.out.println("4: Вывести репозиторий");
         System.out.println("5: Отсортировать репозиторий");
         System.out.println("6: Поиск человека");
+        System.out.println("7: DOM export");
         System.out.println("8: DOM import");
         System.out.println("9: JAXB export");
         System.out.println("10: JAXB import");
