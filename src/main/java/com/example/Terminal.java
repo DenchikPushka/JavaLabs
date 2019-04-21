@@ -1,5 +1,8 @@
 package com.example;
 
+import com.example.XML.DOM;
+import com.example.XML.JAXB;
+import com.example.XML.SAX;
 import com.example.checkers.HumanAgeChecker;
 import com.example.checkers.HumanFullNameChecker;
 import com.example.checkers.HumanIdChecker;
@@ -16,6 +19,9 @@ import java.util.Scanner;
 
 public class Terminal {
     public static void main(String[] args) {
+        DOM dom;
+        JAXB jaxb;
+        SAX sax = new SAX();
         String strxml = "";
         Scanner scanner = new Scanner(System.in);
         HumansRepository humans;
@@ -56,19 +62,26 @@ public class Terminal {
                     findHumans(humans);
                     break;
                 case 7:
-                    strxml = humans.exportToXMLDOM();
+                    dom = new DOM();
+                    strxml = dom.toExport(humans);
+                    System.out.println(strxml);
                     break;
                 case 8:
-                    humans = HumansRepository.importFromXMLDOM(strxml);
+                    dom = new DOM();
+                    humans = dom.toImport(strxml);
                     break;
                 case 9:
-                    strxml = humans.exportToXMLJAXB();
+                    jaxb = new JAXB();
+                    strxml = jaxb.toExport(humans);
+                    System.out.println(strxml);
                     break;
                 case 10:
-                    humans = HumansRepository.importFromXMLJAXB(strxml);
+                    jaxb = new JAXB();
+                    humans = jaxb.toImport(strxml);
                     break;
                 case 12:
-                    humans = HumansRepository.importFromXMLSAX(strxml);
+                    sax = new SAX();
+                    humans = sax.toImport(strxml);
                     break;
                 default:
                     System.out.println("Комманда не найдена");
